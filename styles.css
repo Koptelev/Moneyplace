@@ -1,0 +1,402 @@
+/* Класс для скрытых элементов */
+.hidden {
+    display: none;
+  }
+  
+  @font-face {
+    font-family: 'Lab Grotesque';
+    src: url('fonts/LabGrotesque-Regular.woff2') format('woff2'),
+         url('fonts/LabGrotesque-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Lab Grotesque';
+    src: url('fonts/LabGrotesque-Medium.woff2') format('woff2'),
+         url('fonts/LabGrotesque-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+  }
+  
+  :root {
+    --primary-color: #01BF83;
+    --secondary-color: #000;
+    --text-color: #fff;
+    --background-color: #000;
+    --card-background: #111;
+    --border-color: #333;
+    --hover-color: #222;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --input-background: #111;
+    --input-border: #333;
+    --input-text: #fff;
+    --input-placeholder: #888;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Lab Grotesque', sans-serif;
+    line-height: 1.5;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    min-height: 100vh;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .logo {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .logo img {
+    max-width: 200px;
+    height: auto;
+  }
+  
+  .form-section {
+    background: var(--card-background);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px var(--shadow-color);
+    margin-bottom: 2rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border-color);
+  }
+  
+  .form-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px var(--shadow-color);
+    border-color: var(--primary-color);
+  }
+  
+  h2, h3, h4 {
+    color: var(--text-color);
+    font-weight: 500;
+  }
+  
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+  }
+  
+  h4 {
+    font-size: 1.25rem;
+    margin: 1rem 0 0.5rem;
+  }
+  
+  .radio-group, .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .radio-button, .checkbox {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: background 0.3s, border-color 0.3s;
+    border: 1px solid var(--border-color);
+    background-color: var(--card-background);
+  }
+  
+  .radio-button:hover, .checkbox:hover {
+    background-color: var(--hover-color);
+    border-color: var(--primary-color);
+  }
+  
+  .radio-button input, .checkbox input {
+    margin-right: 1rem;
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary-color);
+  }
+  
+  .text-input {
+    margin-top: 1.5rem;
+  }
+  
+  .text-input input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid var(--input-border);
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    background-color: var(--input-background);
+    color: var(--input-text);
+  }
+  
+  .text-input input::placeholder {
+    color: var(--input-placeholder);
+  }
+  
+  .text-input input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(1, 191, 131, 0.1);
+  }
+  
+  .submit-button {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+  }
+  
+  .submit-button:hover {
+    background-color: #00a873;
+    transform: translateY(-2px);
+  }
+  
+  .priority-group {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .priority-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    cursor: move;
+    transition: border 0.3s, box-shadow 0.3s;
+  }
+  
+  .priority-item:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 10px var(--shadow-color);
+  }
+  
+  .priority-number {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-color);
+    color: #fff;
+    border-radius: 50%;
+    margin-right: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  .priority-text {
+    flex-grow: 1;
+    font-size: 1rem;
+  }
+  
+  .priority-controls {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .priority-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background-color: var(--card-background);
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+    font-size: 1.25rem;
+    color: var(--text-color);
+  }
+  
+  .priority-btn:hover:not(:disabled) {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+  }
+  
+  .priority-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  /* Стили для модального окна */
+  .results-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .results-modal-content {
+    background-color: var(--background-color);
+    border-radius: 1rem;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    font-family: 'Lab Grotesque', sans-serif;
+  }
+  
+  .results-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .results-modal-header h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .results-modal-close {
+    font-size: 28px;
+    border: none;
+    background: none;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .results-modal-close:hover {
+    color: var(--primary-color);
+  }
+  
+  .results-modal-body {
+    padding: 20px;
+  }
+  
+  .results-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .results-modal-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.3s;
+    font-family: 'Lab Grotesque', sans-serif;
+  }
+  
+  .copy-button {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
+  
+  .copy-button:hover {
+    background-color: #00c78c;
+    transform: translateY(-2px);
+  }
+  
+  .new-tab-button {
+    background-color: #2196F3;
+    color: #fff;
+  }
+  
+  .new-tab-button:hover {
+    background-color: #0b7dda;
+    transform: translateY(-2px);
+  }
+  
+  .results-container {
+    font-family: 'Lab Grotesque', sans-serif;
+  }
+  
+  .results-item {
+    display: flex;
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .results-item:last-child {
+    border-bottom: none;
+  }
+  
+  .results-label {
+    font-weight: 500;
+    width: 40%;
+    background-color: #222;
+    padding: 8px;
+    border-radius: 0.5rem;
+    margin-right: 10px;
+  }
+  
+  .results-value {
+    width: 60%;
+  }
+  
+  .results-notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 0.5rem;
+    z-index: 2000;
+    animation: fadeInOut 2s forwards;
+  }
+  
+  @keyframes fadeInOut {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  
+  @media (max-width: 640px) {
+    .container {
+      padding: 1rem;
+    }
+    .form-section {
+      padding: 1.5rem;
+    }
+    h2 {
+      font-size: 1.75rem;
+    }
+    h3 {
+      font-size: 1.25rem;
+    }
+    .radio-button, .checkbox {
+      padding: 0.75rem;
+    }
+  }
+  
