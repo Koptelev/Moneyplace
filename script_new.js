@@ -502,6 +502,19 @@ function init() {
                     `${index + 1}. ${item}`
                 ).join('\n');
             }
+
+            // Собираем ранжированные возможности
+            const possibilities = [];
+            for (let i = 1; i <= 3; i++) {
+                const possibility = document.querySelector(`input[name="possibility${i}"]`)?.value;
+                if (possibility) {
+                    possibilities.push(possibility);
+                }
+            }
+            
+            if (possibilities.length > 0) {
+                results['Ранжированные возможности'] = possibilities.map((p, i) => `${i + 1}. ${p}`).join('\n');
+            }
         } catch (error) {
             console.error('Ошибка при сборе результатов самостоятельной работы:', error);
         }
