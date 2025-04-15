@@ -1,480 +1,541 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Moneyplace - Форма</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moneyplace - Форма</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <div class="logo">
-      <img src="logo.png" alt="Moneyplace Logo">
+    <div class="container">
+        <div class="logo">
+            <img src="logo.png" alt="Moneyplace Logo">
+        </div>
+
+        <form id="clientForm">
+            <div class="form-section">
+                <h2>Информация о клиенте</h2>
+                <div class="client-info">
+                    <div class="input-group">
+                        <label for="clientName">Имя клиента</label>
+                        <input type="text" id="clientName" name="clientName">
+                    </div>
+                    <div class="input-group">
+                        <label for="companyName">Название компании</label>
+                        <input type="text" id="companyName" name="companyName">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Формат работы</h2>
+                <div class="radio-group">
+                    <label class="radio-button">
+                        <input type="radio" name="workFormat" value="self">
+                        <span>Самостоятельная работа с сервисом</span>
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="workFormat" value="delegate">
+                        <span>Делигировать ведение магазина нашей команде</span>
+                    </label>
+                    <label class="radio-button">
+                        <input type="radio" name="workFormat" value="marketplace_entry">
+                        <span>Выход на маркетплейсы под ключ</span>
+                    </label>
+                </div>
+            </div>
+
+            <div id="selfWorkSection" style="display: none;">
+                <div class="form-section">
+                    <h3>На каких маркетплейсах сейчас работаете?</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox">
+                            <input type="checkbox" name="currentMarketplaces" value="ozon">
+                            <span>Ozon</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="currentMarketplaces" value="wildberries">
+                            <span>Wildberries</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="currentMarketplaces" value="yandex">
+                            <span>Яндекс Маркет</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="currentMarketplaces" value="lamoda">
+                            <span>Ламода</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="currentMarketplaces" value="magnit">
+                            <span>Магнит Маркет</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="currentMarketplaces" value="other" data-other="true">
+                            <span>Другое</span>
+                        </label>
+                    </div>
+                    <div class="text-input" style="display: none;">
+                        <input type="text" name="otherCurrentMarketplaces" placeholder="Укажите другие маркетплейсы">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>На каких маркетплейсах планируете работать?</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox">
+                            <input type="checkbox" name="plannedMarketplaces" value="ozon">
+                            <span>Ozon</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="plannedMarketplaces" value="wildberries">
+                            <span>Wildberries</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="plannedMarketplaces" value="yandex">
+                            <span>Яндекс Маркет</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="plannedMarketplaces" value="lamoda">
+                            <span>Ламода</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="plannedMarketplaces" value="magnit">
+                            <span>Магнит Маркет</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="plannedMarketplaces" value="other" data-other="true">
+                            <span>Другое</span>
+                        </label>
+                    </div>
+                    <div class="text-input" style="display: none;">
+                        <input type="text" name="otherPlannedMarketplaces" placeholder="Укажите другие маркетплейсы">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Пользуетесь ли каким-то сервисом аналитики?</h3>
+                    <div class="radio-group">
+                        <label class="radio-button">
+                            <input type="radio" name="analyticsServices" value="yes">
+                            <span>Да</span>
+                        </label>
+                        <label class="radio-button">
+                            <input type="radio" name="analyticsServices" value="no">
+                            <span>Нет, не пользуюсь</span>
+                        </label>
+                    </div>
+                    <div class="text-input" id="analyticsServicesInput" style="display: none;">
+                        <input type="text" name="analyticsServicesDetails" placeholder="Какой сервис аналитики вы используете?">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Какие блоки в работе с маркетплейсами для Вас важны?</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox">
+                            <input type="checkbox" name="importantBlocks" value="analytics">
+                            <span>Аналитика своих магазинов</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="importantBlocks" value="market_analysis">
+                            <span>Внешняя аналитика рынка конкурентов</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="importantBlocks" value="promotion">
+                            <span>Продвижение товаров</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="importantBlocks" value="inventory">
+                            <span>Остатки/прогнозирование поставок</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="importantBlocks" value="pricing">
+                            <span>Управление ценами</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="importantBlocks" value="efficiency">
+                            <span>Замер эффективности изменений в магазине</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="importantBlocks" value="seo">
+                            <span>Сбор семантического ядра для карточек (SEO)</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="importantBlocks" value="automation">
+                            <span>Автоматизация ответов на вопросы и отзывы</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="importantBlocks" value="other" data-other="true">
+                            <span>Другое</span>
+                        </label>
+                    </div>
+                    <div class="text-input" style="display: none;">
+                        <input type="text" name="otherImportantBlocks" placeholder="Укажите другие блоки">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Какие процессы хотелось бы автоматизировать?</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox">
+                            <input type="checkbox" name="automationProcesses" value="analytics">
+                            <span>Аналитика своих магазинов</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="automationProcesses" value="market_analysis">
+                            <span>Внешняя аналитика рынка конкурентов</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="automationProcesses" value="promotion">
+                            <span>Продвижение товаров</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="automationProcesses" value="inventory">
+                            <span>Остатки/прогнозирование поставок</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="automationProcesses" value="pricing">
+                            <span>Управление ценами</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="automationProcesses" value="efficiency">
+                            <span>Замер эффективности изменений в магазине</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="automationProcesses" value="seo">
+                            <span>Сбор семантического ядра для карточек (SEO)</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="automationProcesses" value="automation">
+                            <span>Автоматизация ответов на вопросы и отзывы</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="automationProcesses" value="other" data-other="true">
+                            <span>Другое</span>
+                        </label>
+                    </div>
+                    <div class="text-input" style="display: none;">
+                        <input type="text" name="otherAutomationProcesses" placeholder="Укажите другие процессы">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Как у Вас происходит процесс поддержки продаж?</h3>
+                    <div class="checkbox-group" id="supportProcessGroup">
+                        <label class="checkbox">
+                            <input type="checkbox" name="supportProcess" value="reviews">
+                            <span>Работа с отзывами клиентов</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="supportProcess" value="logistics">
+                            <span>Оптимизация логистики</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="supportProcess" value="promotion">
+                            <span>Продвижение товаров</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="supportProcess" value="pricing">
+                            <span>Автоматическое управление ценами</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="supportProcess" value="reporting">
+                            <span>Финансовая отчетность</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="supportProcess" value="efficiency">
+                            <span>Замер эффективности</span>
+                        </label>
+                    </div>
+                    <h4>Расставьте в порядке приоритета</h4>
+                    <div class="priority-group" id="supportProcessPriority"></div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Что может Вас заинтересовать в процессе внедрения новых артикулов?</h3>
+                    <div class="checkbox-group" id="newArticlesGroup">
+                        <label class="checkbox">
+                            <input type="checkbox" name="newArticles" value="market_analysis">
+                            <span>Внешняя аналитика рынка</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="newArticles" value="description">
+                            <span>Быстрое создание описания</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="newArticles" value="suppliers">
+                            <span>Поиск новых поставщиков</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="newArticles" value="calculator">
+                            <span>Калькулятор прибыльности нового товара</span>
+                        </label>
+                    </div>
+                    <h4>Расставьте в порядке приоритета</h4>
+                    <div class="priority-group" id="newArticlesPriority"></div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Что может Вас заинтересовать в оптимизации текущей матрицы?</h3>
+                    <div class="checkbox-group" id="matrixOptimizationGroup">
+                        <label class="checkbox">
+                            <input type="checkbox" name="matrixOptimization" value="analysis">
+                            <span>Анализ товарной матрицы</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="matrixOptimization" value="economics">
+                            <span>Юнит-экономика</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="matrixOptimization" value="seo">
+                            <span>Проверка SEO</span>
+                        </label>
+                    </div>
+                    <h4>Расставьте в порядке приоритета</h4>
+                    <div class="priority-group" id="matrixOptimizationPriority"></div>
+                </div>
+            </div>
+
+            <div id="delegateSection" style="display: none;">
+                <div class="form-section">
+                    <h3>С каким товаром работаете?</h3>
+                    <div class="radio-group">
+                        <label class="radio-button">
+                            <input type="radio" name="productType" value="manufacturer">
+                            <span>Производитель</span>
+                        </label>
+                        <label class="radio-button">
+                            <input type="radio" name="productType" value="distributor">
+                            <span>Дистрибьютор</span>
+                        </label>
+                    </div>
+                    <div class="text-input">
+                        <input type="text" name="productDescription" placeholder="Какой товар?">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>На каких маркетплейсах сейчас работаете?</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox">
+                            <input type="checkbox" name="currentMarketplacesDelegate" value="ozon">
+                            <span>Ozon</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="currentMarketplacesDelegate" value="wildberries">
+                            <span>Wildberries</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="currentMarketplacesDelegate" value="yandex">
+                            <span>Яндекс Маркет</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="currentMarketplacesDelegate" value="lamoda">
+                            <span>Ламода</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="currentMarketplacesDelegate" value="magnit">
+                            <span>Магнит Маркет</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="currentMarketplacesDelegate" value="other" data-other="true">
+                            <span>Другое</span>
+                        </label>
+                    </div>
+                    <div class="text-input" style="display: none;">
+                        <input type="text" name="otherCurrentMarketplacesDelegate" placeholder="Укажите другие маркетплейсы">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>На каких маркетплейсах планируете работать?</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox">
+                            <input type="checkbox" name="plannedMarketplacesDelegate" value="ozon">
+                            <span>Ozon</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="plannedMarketplacesDelegate" value="wildberries">
+                            <span>Wildberries</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="plannedMarketplacesDelegate" value="yandex">
+                            <span>Яндекс Маркет</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="plannedMarketplacesDelegate" value="lamoda">
+                            <span>Ламода</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="plannedMarketplacesDelegate" value="magnit">
+                            <span>Магнит Маркет</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="plannedMarketplacesDelegate" value="other" data-other="true">
+                            <span>Другое</span>
+                        </label>
+                    </div>
+                    <div class="text-input" style="display: none;">
+                        <input type="text" name="otherPlannedMarketplacesDelegate" placeholder="Укажите другие маркетплейсы">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Какое количество продаваемых позиций?</h3>
+                    <div class="radio-group">
+                        <label class="radio-button">
+                            <input type="radio" name="positionsCount" value="less_5">
+                            <span>Менее 5</span>
+                        </label>
+                        <label class="radio-button">
+                            <input type="radio" name="positionsCount" value="6_50">
+                            <span>От 6 до 50</span>
+                        </label>
+                        <label class="radio-button">
+                            <input type="radio" name="positionsCount" value="51_100">
+                            <span>От 51 до 100</span>
+                        </label>
+                        <label class="radio-button">
+                            <input type="radio" name="positionsCount" value="101_150">
+                            <span>От 101 до 150</span>
+                        </label>
+                        <label class="radio-button">
+                            <input type="radio" name="positionsCount" value="more_150">
+                            <span>Более 150 позиций</span>
+                        </label>
+                    </div>
+                    <div class="text-input" id="positionsCountInput" style="display: none;">
+                        <input type="text" name="positionsCountDetails" placeholder="Сколько?">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Планируете расширение матрицы?</h3>
+                    <div class="radio-group">
+                        <label class="radio-button">
+                            <input type="radio" name="matrixExpansion" value="yes">
+                            <span>Да</span>
+                        </label>
+                        <label class="radio-button">
+                            <input type="radio" name="matrixExpansion" value="no">
+                            <span>Нет</span>
+                        </label>
+                    </div>
+                    <div class="text-input" id="expansionDetailsInput" style="display: none;">
+                        <input type="text" name="expansionDetails" placeholder="Какие позиции?">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Как сейчас выстроен процесс работы с маркетплейсами?</h3>
+                    <div class="radio-group">
+                        <label class="radio-button">
+                            <input type="radio" name="marketplaceProcess" value="staff">
+                            <span>Сотрудник/ки в штате</span>
+                        </label>
+                        <label class="radio-button">
+                            <input type="radio" name="marketplaceProcess" value="outsourcing">
+                            <span>Аутсорсинг</span>
+                        </label>
+                        <label class="radio-button">
+                            <input type="radio" name="marketplaceProcess" value="self">
+                            <span>Веду самостоятельно</span>
+                        </label>
+                        <label class="radio-button">
+                            <input type="radio" name="marketplaceProcess" value="other">
+                            <span>Другое</span>
+                        </label>
+                    </div>
+                    <div class="text-input" id="otherProcessInput" style="display: none;">
+                        <input type="text" name="otherProcessDetails" placeholder="Укажите другой вариант">
+                    </div>
+                </div>
+            </div>
+
+            <div id="marketplaceEntrySection" style="display: none;">
+                <div class="form-section">
+                    <h3>На какие площадки планируете выходить?</h3>
+                    <input type="text" name="targetMarketplaces" class="full-width-input" placeholder="Укажите площадки">
+                </div>
+
+                <div class="form-section">
+                    <h3>С каким товаром хотите работать?</h3>
+                    <div class="radio-group">
+                        <label class="radio-button">
+                            <input type="radio" name="productTypeEntry" value="manufacturer">
+                            <span>Производитель</span>
+                        </label>
+                        <label class="radio-button">
+                            <input type="radio" name="productTypeEntry" value="distributor">
+                            <span>Дистрибьютор</span>
+                        </label>
+                    </div>
+                    <div class="text-input">
+                        <input type="text" name="productDescriptionEntry" placeholder="Опишите ваш товар">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Как будет строиться работа с маркетплейсами?</h3>
+                    <div class="radio-group">
+                        <label class="radio-button">
+                            <input type="radio" name="workStructureEntry" value="staff">
+                            <span>Сотрудник/ки в штате</span>
+                        </label>
+                        <label class="radio-button">
+                            <input type="radio" name="workStructureEntry" value="outsourcing">
+                            <span>Аутсорсинг</span>
+                        </label>
+                        <label class="radio-button">
+                            <input type="radio" name="workStructureEntry" value="self">
+                            <span>Планировал вести самостоятельно</span>
+                        </label>
+                        <label class="radio-button">
+                            <input type="radio" name="workStructureEntry" value="other">
+                            <span>Другое</span>
+                        </label>
+                    </div>
+                    <div class="text-input" id="otherWorkStructureEntryInput" style="display: none;">
+                        <input type="text" name="otherWorkStructureEntry" placeholder="Укажите как">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <button type="submit" class="submit-button">Получить результат</button>
+            </div>
+        </form>
     </div>
-    <form id="clientForm">
-      <!-- Выбор формата работы -->
-      <div class="form-section">
-        <h2>Формат работы</h2>
-        <div class="radio-group">
-          <label class="radio-button">
-            <input type="radio" name="workFormat" value="self" required>
-            <span>Самостоятельная работа с сервисом</span>
-          </label>
-          <label class="radio-button">
-            <input type="radio" name="workFormat" value="delegate" required>
-            <span>Делегировать ведение магазина нашей команде</span>
-          </label>
+    <!-- Модальное окно для результатов -->
+    <div id="resultsModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Результаты опроса</h2>
+            <div id="surveyResults"></div>
+            <div class="modal-buttons">
+                <button type="button" id="copyResults">Копировать результаты</button>
+                <button type="button" id="closeModal">Закрыть</button>
+            </div>
         </div>
-      </div>
-      
-      <!-- Блок для самостоятельной работы -->
-      <div id="selfWorkSection" class="hidden-section hidden">
-        <div class="form-section">
-          <h3>На каких маркетплейсах сейчас работаете?</h3>
-          <div class="checkbox-group">
-            <label class="checkbox">
-              <input type="checkbox" name="currentMarketplaces" value="ozon">
-              <span>Ozon</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="currentMarketplaces" value="wildberries">
-              <span>Wildberries</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="currentMarketplaces" value="yandex">
-              <span>Яндекс Маркет</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="currentMarketplaces" value="lamoda">
-              <span>Ламода</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="currentMarketplaces" value="magnit">
-              <span>Магнит Маркет</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="currentMarketplaces" value="other" data-other data-target="otherCurrentMarketplaces">
-              <span>Другое</span>
-            </label>
-          </div>
-          <div class="text-input hidden">
-            <input type="text" name="otherCurrentMarketplaces" placeholder="Укажите другие маркетплейсы">
-          </div>
-        </div>
-        
-        <div class="form-section">
-          <h3>На каких маркетплейсах планируете работать?</h3>
-          <div class="checkbox-group">
-            <label class="checkbox">
-              <input type="checkbox" name="plannedMarketplaces" value="ozon">
-              <span>Ozon</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="plannedMarketplaces" value="wildberries">
-              <span>Wildberries</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="plannedMarketplaces" value="yandex">
-              <span>Яндекс Маркет</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="plannedMarketplaces" value="lamoda">
-              <span>Ламода</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="plannedMarketplaces" value="magnit">
-              <span>Магнит Маркет</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="plannedMarketplaces" value="other" data-other data-target="otherPlannedMarketplaces">
-              <span>Другое</span>
-            </label>
-          </div>
-          <div class="text-input hidden">
-            <input type="text" name="otherPlannedMarketplaces" placeholder="Укажите другие маркетплейсы">
-          </div>
-        </div>
-        
-        <div class="form-section">
-          <h3>Какими сервисами аналитики пользуетесь?</h3>
-          <div class="checkbox-group">
-            <label class="checkbox">
-              <input type="checkbox" name="analyticsServices" value="mpstats">
-              <span>MPStats</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="analyticsServices" value="mayak">
-              <span>Маяк</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="analyticsServices" value="eggheads">
-              <span>EggHeads</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="analyticsServices" value="marketguru">
-              <span>Маркетгуру</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="analyticsServices" value="ozon_premium">
-              <span>Ozon Premium</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="analyticsServices" value="other" data-other data-target="otherAnalyticsServices">
-              <span>Другая площадка</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="analyticsServices" value="none">
-              <span>Не использую</span>
-            </label>
-          </div>
-          <div class="text-input hidden">
-            <input type="text" name="otherAnalyticsServices" placeholder="Укажите другую площадку">
-          </div>
-        </div>
-        
-        <div class="form-section">
-          <h3>Какие блоки в работе с маркетплейсами для Вас важны?</h3>
-          <div class="checkbox-group">
-            <label class="checkbox">
-              <input type="checkbox" name="importantBlocks" value="analytics">
-              <span>Аналитика своих магазинов</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="importantBlocks" value="market_analysis">
-              <span>Внешняя аналитика рынка конкурентов</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="importantBlocks" value="promotion">
-              <span>Продвижение товаров</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="importantBlocks" value="inventory">
-              <span>Остатки/прогнозирование поставок</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="importantBlocks" value="pricing">
-              <span>Управление ценами</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="importantBlocks" value="efficiency">
-              <span>Замер эффективности изменений в магазине</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="importantBlocks" value="seo">
-              <span>Сбор семантического ядра для карточек (SEO)</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="importantBlocks" value="automation">
-              <span>Автоматизация ответов на вопросы и отзывы</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="importantBlocks" value="other" data-other data-target="otherImportantBlocks">
-              <span>Другое</span>
-            </label>
-          </div>
-          <div class="text-input hidden">
-            <input type="text" name="otherImportantBlocks" placeholder="Укажите другие блоки">
-          </div>
-        </div>
-        
-        <div class="form-section">
-          <h3>Какие процессы хотелось бы автоматизировать?</h3>
-          <div class="checkbox-group">
-            <label class="checkbox">
-              <input type="checkbox" name="automationProcesses" value="analytics">
-              <span>Аналитика своих магазинов</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="automationProcesses" value="market_analysis">
-              <span>Внешняя аналитика рынка конкурентов</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="automationProcesses" value="promotion">
-              <span>Продвижение товаров</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="automationProcesses" value="inventory">
-              <span>Остатки/прогнозирование поставок</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="automationProcesses" value="pricing">
-              <span>Управление ценами</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="automationProcesses" value="efficiency">
-              <span>Замер эффективности изменений в магазине</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="automationProcesses" value="seo">
-              <span>Сбор семантического ядра для карточек (SEO)</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="automationProcesses" value="automation">
-              <span>Автоматизация ответов на вопросы и отзывы</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="automationProcesses" value="other" data-other data-target="otherAutomationProcesses">
-              <span>Другое</span>
-            </label>
-          </div>
-          <div class="text-input hidden">
-            <input type="text" name="otherAutomationProcesses" placeholder="Укажите другие процессы">
-          </div>
-        </div>
-        
-        <div class="form-section">
-          <h3>Как у Вас происходит процесс поддержки продаж?</h3>
-          <div class="checkbox-group" id="supportProcessGroup">
-            <label class="checkbox">
-              <input type="checkbox" name="supportProcess" value="reviews">
-              <span>Работа с отзывами клиентов</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="supportProcess" value="logistics">
-              <span>Оптимизация логистики</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="supportProcess" value="promotion">
-              <span>Продвижение товаров</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="supportProcess" value="pricing">
-              <span>Автоматическое управление ценами</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="supportProcess" value="reporting">
-              <span>Финансовая отчетность</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="supportProcess" value="efficiency">
-              <span>Замер эффективности</span>
-            </label>
-          </div>
-          <h4>Расставьте в порядке приоритета</h4>
-          <div class="priority-group" id="supportProcessPriority"></div>
-        </div>
-        
-        <div class="form-section">
-          <h3>Что может Вас заинтересовать в процессе внедрения новых артикулов?</h3>
-          <div class="checkbox-group" id="newArticlesGroup">
-            <label class="checkbox">
-              <input type="checkbox" name="newArticles" value="market_analysis">
-              <span>Внешняя аналитика рынка</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="newArticles" value="description">
-              <span>Быстрое создание описания</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="newArticles" value="suppliers">
-              <span>Поиск новых поставщиков</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="newArticles" value="calculator">
-              <span>Калькулятор прибыльности нового товара</span>
-            </label>
-          </div>
-          <h4>Расставьте в порядке приоритета</h4>
-          <div class="priority-group" id="newArticlesPriority"></div>
-        </div>
-        
-        <div class="form-section">
-          <h3>Что может Вас заинтересовать в оптимизации текущей матрицы?</h3>
-          <div class="checkbox-group" id="matrixOptimizationGroup">
-            <label class="checkbox">
-              <input type="checkbox" name="matrixOptimization" value="analysis">
-              <span>Анализ товарной матрицы</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="matrixOptimization" value="economics">
-              <span>Юнит-экономика</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="matrixOptimization" value="seo">
-              <span>Проверка SEO</span>
-            </label>
-          </div>
-          <h4>Расставьте в порядке приоритета</h4>
-          <div class="priority-group" id="matrixOptimizationPriority"></div>
-        </div>
-      </div>
-      
-      <!-- Блок для делегирования -->
-      <div id="delegateSection" class="hidden-section hidden">
-        <div class="form-section">
-          <h3>С каким товаром работаете?</h3>
-          <div class="radio-group">
-            <label class="radio-button">
-              <input type="radio" name="productType" value="manufacturer" required>
-              <span>Производитель</span>
-            </label>
-            <label class="radio-button">
-              <input type="radio" name="productType" value="distributor" required>
-              <span>Дистрибьютор</span>
-            </label>
-          </div>
-          <div class="text-input hidden" id="productDescriptionInput">
-            <input type="text" name="productDescription" placeholder="Какой товар?">
-          </div>
-        </div>
-        
-        <div class="form-section">
-          <h3>На каких маркетплейсах сейчас работаете?</h3>
-          <div class="checkbox-group">
-            <label class="checkbox">
-              <input type="checkbox" name="currentMarketplacesDelegate" value="ozon">
-              <span>Ozon</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="currentMarketplacesDelegate" value="wildberries">
-              <span>Wildberries</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="currentMarketplacesDelegate" value="yandex">
-              <span>Яндекс Маркет</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="currentMarketplacesDelegate" value="lamoda">
-              <span>Ламода</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="currentMarketplacesDelegate" value="magnit">
-              <span>Магнит Маркет</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="currentMarketplacesDelegate" value="other" data-other data-target="otherCurrentMarketplacesDelegate">
-              <span>Другое</span>
-            </label>
-          </div>
-          <div class="text-input hidden">
-            <input type="text" name="otherCurrentMarketplacesDelegate" placeholder="Укажите другие маркетплейсы">
-          </div>
-        </div>
-        
-        <div class="form-section">
-          <h3>На каких маркетплейсах планируете работать?</h3>
-          <div class="checkbox-group">
-            <label class="checkbox">
-              <input type="checkbox" name="plannedMarketplacesDelegate" value="ozon">
-              <span>Ozon</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="plannedMarketplacesDelegate" value="wildberries">
-              <span>Wildberries</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="plannedMarketplacesDelegate" value="yandex">
-              <span>Яндекс Маркет</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="plannedMarketplacesDelegate" value="lamoda">
-              <span>Ламода</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="plannedMarketplacesDelegate" value="magnit">
-              <span>Магнит Маркет</span>
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" name="plannedMarketplacesDelegate" value="other" data-other data-target="otherPlannedMarketplacesDelegate">
-              <span>Другое</span>
-            </label>
-          </div>
-          <div class="text-input hidden">
-            <input type="text" name="otherPlannedMarketplacesDelegate" placeholder="Укажите другие маркетплейсы">
-          </div>
-        </div>
-        
-        <div class="form-section">
-          <h3>Какое количество продаваемых позиций?</h3>
-          <div class="radio-group">
-            <label class="radio-button">
-              <input type="radio" name="positionsCount" value="less_5" required>
-              <span>Менее 5</span>
-            </label>
-            <label class="radio-button">
-              <input type="radio" name="positionsCount" value="6_50" required>
-              <span>От 6 до 50</span>
-            </label>
-            <label class="radio-button">
-              <input type="radio" name="positionsCount" value="51_100" required>
-              <span>От 51 до 100</span>
-            </label>
-            <label class="radio-button">
-              <input type="radio" name="positionsCount" value="101_150" required>
-              <span>От 101 до 150</span>
-            </label>
-            <label class="radio-button">
-              <input type="radio" name="positionsCount" value="more_150" required>
-              <span>Более 150 позиций</span>
-            </label>
-          </div>
-          <div class="text-input hidden" id="positionsCountInput">
-            <input type="text" name="positionsCountDetails" placeholder="Укажите количество позиций">
-          </div>
-        </div>
-        
-        <div class="form-section">
-          <h3>Планируете расширение матрицы?</h3>
-          <div class="radio-group">
-            <label class="radio-button">
-              <input type="radio" name="matrixExpansion" value="yes" required>
-              <span>Да</span>
-            </label>
-            <label class="radio-button">
-              <input type="radio" name="matrixExpansion" value="no" required>
-              <span>Нет</span>
-            </label>
-          </div>
-          <div class="text-input hidden" id="expansionDetailsInput">
-            <input type="text" name="expansionDetails" placeholder="Какими позициями?">
-          </div>
-        </div>
-        
-        <div class="form-section">
-          <h3>Как сейчас выстроен процесс работы с маркетплейсами?</h3>
-          <div class="radio-group">
-            <label class="radio-button">
-              <input type="radio" name="marketplaceProcess" value="staff" required>
-              <span>Сотрудник/ки в штате</span>
-            </label>
-            <label class="radio-button">
-              <input type="radio" name="marketplaceProcess" value="outsourcing" required>
-              <span>Аутсорсинг</span>
-            </label>
-            <label class="radio-button">
-              <input type="radio" name="marketplaceProcess" value="self" required>
-              <span>Веду самостоятельно</span>
-            </label>
-            <label class="radio-button">
-              <input type="radio" name="marketplaceProcess" value="other" required>
-              <span>Другое</span>
-            </label>
-          </div>
-          <div class="text-input hidden" id="otherProcessInput">
-            <input type="text" name="otherProcessDetails" placeholder="Укажите другой вариант">
-          </div>
-        </div>
-      </div>
-      
-      <!-- Контактная информация -->
-      <div class="form-section" id="contactInformation">
-        <h3>Контактная информация</h3>
-        <div class="text-input">
-          <input type="text" name="name" placeholder="Имя" required>
-        </div>
-        <div class="text-input">
-          <input type="email" name="email" placeholder="Email" required>
-        </div>
-        <div class="text-input">
-          <input type="tel" name="phone" placeholder="Телефон">
-        </div>
-      </div>
-      
-      <div class="form-section">
-        <button type="submit" class="submit-button">Отправить</button>
-      </div>
-    </form>
-  </div>
-  <script src="script_new.js"></script>
+    </div>
+    <script>
+        // Проверка загрузки скрипта
+        window.onload = function() {
+            console.log('Страница загружена');
+            const form = document.getElementById('clientForm');
+            const resultModal = document.getElementById('resultsModal');
+            const resultContainer = document.getElementById('surveyResults');
+            const copyBtn = document.getElementById('copyResults');
+            const closeBtn = document.getElementById('closeModal');
+            
+            console.log('Элементы формы:', {
+                form: !!form,
+                resultModal: !!resultModal,
+                resultContainer: !!resultContainer,
+                copyBtn: !!copyBtn,
+                closeBtn: !!closeBtn
+            });
+        };
+    </script>
+    <script src="script_new.js"></script>
 </body>
-</html>
+</html> 
