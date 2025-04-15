@@ -1,409 +1,635 @@
-document.addEventListener('DOMContentLoaded', () => {
+// Проверяем, что DOM полностью загружен
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
+
+function init() {
+    console.log('Инициализация скрипта');
+    
     const form = document.getElementById('clientForm');
-    if (!form) return console.error("Форма не найдена!");
-  
-    // Универсальная функция для переключения видимости
-    const toggleVisibility = (element, show) => {
-      element.style.display = show ? 'block' : 'none';
-    };
-  
-    // Переключение секций по формату работы
-    const selfSection = document.getElementById('selfWorkSection');
-    const delegateSection = document.getElementById('delegateSection');
-    document.querySelectorAll('input[name="workFormat"]').forEach(radio => {
-      radio.addEventListener('change', (e) => {
-        const isSelf = e.target.value === 'self';
-        toggleVisibility(selfSection, isSelf);
-        toggleVisibility(delegateSection, !isSelf);
-      });
-    });
-  
-    // Обработка чекбоксов «Другое»
-    document.querySelectorAll('input[data-other]').forEach(checkbox => {
-      checkbox.addEventListener('change', () => {
-        const targetName = checkbox.getAttribute('data-target');
-        if (!targetName) return;
-        const inputField = form.querySelector(`input[name="${targetName}"]`);
-        if (inputField) {
-          toggleVisibility(inputField.parentElement, checkbox.checked);
-          if (checkbox.checked) inputField.focus();
-        }
-      });
-    });
-  
-    // Обработка дополнительных полей для радио-кнопок
-    document.querySelectorAll('input[name="productType"]').forEach(radio => {
-      radio.addEventListener('change', () => {
-        const productDescInput = document.getElementById('productDescriptionInput');
-        toggleVisibility(productDescInput, true);
-        productDescInput.querySelector('input').focus();
-      });
-    });
-    document.querySelectorAll('input[name="positionsCount"]').forEach(radio => {
-      radio.addEventListener('change', (e) => {
-        const positionsInput = document.getElementById('positionsCountInput');
-        toggleVisibility(positionsInput, e.target.value === 'more_150');
-      });
-    });
-    document.querySelectorAll('input[name="matrixExpansion"]').forEach(radio => {
-      radio.addEventListener('change', (e) => {
-        const expansionInput = document.getElementById('expansionDetailsInput');
-        toggleVisibility(expansionInput, e.target.value === 'yes');
-      });
-    });
-    document.querySelectorAll('input[name="marketplaceProcess"]').forEach(radio => {
-      radio.addEventListener('change', (e) => {
-        const otherProcessInput = document.getElementById('otherProcessInput');
-        toggleVisibility(otherProcessInput, e.target.value === 'other');
-      });
-    });
-  
-    // Функции для работы с группами приоритетов
-    const updatePriorityGroup = (priorityGroup, checkboxGroup) => {
-      priorityGroup.innerHTML = '';
-      const checkboxes = Array.from(checkboxGroup.querySelectorAll('input[type="checkbox"]:checked'));
-      checkboxes.forEach((checkbox, index) => {
-        const priorityItem = document.createElement('div');
-        priorityItem.className = 'priority-item';
-        priorityItem.dataset.value = checkbox.value;
-        priorityItem.innerHTML = `
-          <div class="priority-number">${index + 1}</div>
-          <div class="priority-text">${checkbox.nextElementSibling.textContent}</div>
-          <div class="priority-controls">
-            <button type="button" class="priority-btn" data-direction="up" ${index === 0 ? 'disabled' : ''}>↑</button>
-            <button type="button" class="priority-btn" data-direction="down" ${index === checkboxes.length - 1 ? 'disabled' : ''}>↓</button>
-          </div>
-        `;
-        priorityItem.querySelectorAll('.priority-btn').forEach(btn => {
-          btn.addEventListener('click', () => movePriorityItem(btn, priorityGroup, checkboxGroup));
+    const resultModal = document.getElementById('resultsModal');
+    const resultContainer = document.getElementById('surveyResults');
+    const copyBtn = document.getElementById('copyResults');
+    const closeBtn = document.getElementById('closeModal');
+
+    // Проверяем наличие всех необходимых элементов
+    if (!form || !resultModal || !resultContainer || !copyBtn || !closeBtn) {
+        console.error('Не найдены необходимые элементы:', {
+            form: !!form,
+            resultModal: !!resultModal,
+            resultContainer: !!resultContainer,
+            copyBtn: !!copyBtn,
+            closeBtn: !!closeBtn
         });
-        priorityGroup.appendChild(priorityItem);
-      });
-      const hiddenInput = priorityGroup.querySelector('input[type="hidden"]');
-      if (hiddenInput) {
-        const priorities = Array.from(priorityGroup.querySelectorAll('.priority-item'))
-                              .map(item => item.dataset.value);
-        hiddenInput.value = JSON.stringify(priorities);
-      }
-    };
-  
-    const movePriorityItem = (button, priorityGroup, checkboxGroup) => {
-      const priorityItem = button.closest('.priority-item');
-      const items = Array.from(priorityGroup.querySelectorAll('.priority-item'));
-      const currentIndex = items.indexOf(priorityItem);
-      const direction = button.getAttribute('data-direction');
-      if (direction === 'up' && currentIndex > 0) {
-        priorityGroup.insertBefore(priorityItem, items[currentIndex - 1]);
-      } else if (direction === 'down' && currentIndex < items.length - 1) {
-        priorityGroup.insertBefore(priorityItem, items[currentIndex + 2]);
-      }
-      items.forEach((item, index) => {
-        item.querySelector('.priority-number').textContent = index + 1;
-        const [upBtn, downBtn] = item.querySelectorAll('.priority-btn');
-        upBtn.disabled = index === 0;
-        downBtn.disabled = index === items.length - 1;
-      });
-      const hiddenInput = priorityGroup.querySelector('input[type="hidden"]');
-      if (hiddenInput) {
-        const priorities = Array.from(priorityGroup.querySelectorAll('.priority-item'))
-                              .map(item => item.dataset.value);
-        hiddenInput.value = JSON.stringify(priorities);
-      }
-    };
-  
-    // Инициализация обработки приоритетов для заданных групп
-    const initializePriorityHandling = (checkboxGroupSelector, priorityGroupId) => {
-      const checkboxGroup = document.querySelector(checkboxGroupSelector);
-      const priorityGroup = document.getElementById(priorityGroupId);
-      if (!checkboxGroup || !priorityGroup) return;
-      checkboxGroup.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('change', () => updatePriorityGroup(priorityGroup, checkboxGroup));
-      });
-    };
-    initializePriorityHandling('#supportProcessGroup', 'supportProcessPriority');
-    initializePriorityHandling('#newArticlesGroup', 'newArticlesPriority');
-    initializePriorityHandling('#matrixOptimizationGroup', 'matrixOptimizationPriority');
-  
-    // Сброс формы по клику на логотип
-    const logo = document.querySelector('.logo');
-    if (logo) {
-      logo.addEventListener('click', () => {
-        form.reset();
-        document.querySelectorAll('.hidden-section').forEach(section => section.classList.add('hidden'));
-        document.querySelectorAll('.text-input').forEach(input => input.classList.add('hidden'));
-        document.querySelectorAll('.priority-group').forEach(group => group.innerHTML = '');
-        window.scrollTo(0, 0);
-      });
+        return;
     }
-  
-    // Формирование таблицы результатов из данных формы
-    const createResultsTable = (formData) => {
-      const workFormat = formData.get('workFormat');
-      if (!workFormat) return '';
-      const workFormatText = workFormat === 'self'
-                             ? 'Самостоятельная работа с сервисом'
-                             : 'Делегировать ведение магазина нашей команде';
-      let resultsHtml = `<div class="results-container">
-        <div class="results-item">
-          <div class="results-label">Формат работы:</div>
-          <div class="results-value">${workFormatText}</div>
-        </div>`;
-  
-      if (workFormat === 'self') {
-        // Функция для обработки групп чекбоксов
-        const processList = (fieldName, labelText, mapping) => {
-          const checkboxes = Array.from(form.querySelectorAll(`input[name="${fieldName}"]:checked`));
-          if (checkboxes.length === 0) return '';
-          const items = checkboxes.map(checkbox => {
-            if (checkbox.value === 'other') {
-              const otherValue = formData.get(form.querySelector(`input[data-target="other${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}"]`)?.getAttribute('data-target')) || '';
-              return otherValue || 'Другое';
+
+    console.log('Все элементы найдены');
+
+    // Функция для обновления атрибута required
+    function updateRequiredFields(section) {
+        // Сначала убираем required у всех полей во всех секциях
+        document.querySelectorAll('input[required]').forEach(input => {
+            input.removeAttribute('required');
+        });
+
+        // Затем добавляем required только к видимым полям в активной секции
+        if (section) {
+            const visibleInputs = section.querySelectorAll('input:not([type="radio"]):not([type="checkbox"])');
+            visibleInputs.forEach(input => {
+                const parentDiv = input.closest('.text-input');
+                if (parentDiv && window.getComputedStyle(parentDiv).display !== 'none') {
+                    input.setAttribute('required', 'required');
+                }
+            });
+        }
+    }
+
+    // Функция для проверки видимости элемента
+    function isElementVisible(element) {
+        const style = window.getComputedStyle(element);
+        return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+    }
+
+    // Показываем/скрываем секции в зависимости от формата
+    document.querySelectorAll('input[name="workFormat"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            console.log('Изменен формат работы:', radio.value);
+            
+            // Скрываем все секции
+            const sections = ['selfWorkSection', 'delegateSection', 'marketplaceEntrySection'];
+            sections.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.style.display = 'none';
+                }
+            });
+
+            // Показываем выбранную секцию
+            if (radio.checked) {
+                const sectionId = {
+                    self: 'selfWorkSection',
+                    delegate: 'delegateSection',
+                    marketplace_entry: 'marketplaceEntrySection'
+                }[radio.value];
+                
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.style.display = 'block';
+                    updateRequiredFields(section);
+                } else {
+                    console.error('Секция не найдена:', sectionId);
+                }
             }
-            return mapping[checkbox.value] || checkbox.value;
-          });
-          return `<div class="results-item">
-            <div class="results-label">${labelText}:</div>
-            <div class="results-value">${items.join(', ')}</div>
-          </div>`;
-        };
-  
-        resultsHtml += processList('currentMarketplaces', 'На каких маркетплейсах сейчас работаете', {
-          ozon: 'Ozon',
-          wildberries: 'Wildberries',
-          yandex: 'Яндекс Маркет',
-          lamoda: 'Ламода',
-          magnit: 'Магнит Маркет'
         });
-        resultsHtml += processList('plannedMarketplaces', 'На каких маркетплейсах планируете работать', {
-          ozon: 'Ozon',
-          wildberries: 'Wildberries',
-          yandex: 'Яндекс Маркет',
-          lamoda: 'Ламода',
-          magnit: 'Магнит Маркет'
-        });
-        resultsHtml += processList('analyticsServices', 'Какими сервисами аналитики пользуетесь', {
-          mpstats: 'MPStats',
-          mayak: 'Маяк',
-          eggheads: 'EggHeads',
-          marketguru: 'Маркетгуру',
-          ozon_premium: 'Ozon Premium',
-          none: 'Не использую'
-        });
-        resultsHtml += processList('importantBlocks', 'Какие блоки для Вас важны', {
-          analytics: 'Аналитика своих магазинов',
-          market_analysis: 'Внешняя аналитика конкурентов',
-          promotion: 'Продвижение товаров',
-          inventory: 'Остатки/прогнозирование поставок',
-          pricing: 'Управление ценами',
-          efficiency: 'Замер эффективности',
-          seo: 'Сбор семантического ядра (SEO)',
-          automation: 'Автоматизация ответов'
-        });
-        resultsHtml += processList('automationProcesses', 'Какие процессы автоматизировать', {
-          analytics: 'Аналитика',
-          market_analysis: 'Внешняя аналитика',
-          promotion: 'Продвижение',
-          inventory: 'Остатки/прогноз',
-          pricing: 'Управление ценами',
-          efficiency: 'Замер эффективности',
-          seo: 'Сбор семантического ядра (SEO)',
-          automation: 'Автоматизация ответов'
-        });
-        resultsHtml += processList('supportProcess', 'Поддержка продаж', {
-          reviews: 'Работа с отзывами',
-          logistics: 'Оптимизация логистики',
-          promotion: 'Продвижение',
-          pricing: 'Автоматическое управление ценами',
-          reporting: 'Финансовая отчетность',
-          efficiency: 'Замер эффективности'
-        });
-        resultsHtml += processList('newArticles', 'Новые артикулы', {
-          market_analysis: 'Внешняя аналитика',
-          description: 'Быстрое создание описания',
-          suppliers: 'Поиск поставщиков',
-          calculator: 'Калькулятор прибыльности'
-        });
-        resultsHtml += processList('matrixOptimization', 'Оптимизация матрицы', {
-          analysis: 'Анализ товарной матрицы',
-          economics: 'Юнит-экономика',
-          seo: 'Проверка SEO'
-        });
-      } else if (workFormat === 'delegate') {
-        // Обработка полей для делегирования
-        const productType = formData.get('productType');
-        let productText = '';
-        if (productType) {
-          productText = productType === 'manufacturer' ? 'Производитель' : 'Дистрибьютор';
-          const productDescription = formData.get('productDescription');
-          if (productDescription) productText += ` (${productDescription})`;
-          resultsHtml += `<div class="results-item">
-            <div class="results-label">Тип товара:</div>
-            <div class="results-value">${productText}</div>
-          </div>`;
-        }
-        const mapMarketplace = { ozon: 'Ozon', wildberries: 'Wildberries', yandex: 'Яндекс Маркет', lamoda: 'Ламода', magnit: 'Магнит Маркет' };
-        const getMappedList = (selector) =>
-          Array.from(form.querySelectorAll(selector + ':checked'))
-               .map(cb => mapMarketplace[cb.value] || cb.value)
-               .join(', ');
-        
-        resultsHtml += `<div class="results-item">
-          <div class="results-label">Маркетплейсы (сейчас):</div>
-          <div class="results-value">${getMappedList('input[name="currentMarketplacesDelegate"]')}</div>
-        </div>`;
-        resultsHtml += `<div class="results-item">
-          <div class="results-label">Маркетплейсы (план):</div>
-          <div class="results-value">${getMappedList('input[name="plannedMarketplacesDelegate"]')}</div>
-        </div>`;
-        
-        const positionsCount = formData.get('positionsCount');
-        if (positionsCount) {
-          let positionsText = '';
-          switch (positionsCount) {
-            case 'less_5': positionsText = 'Менее 5'; break;
-            case '6_50': positionsText = 'От 6 до 50'; break;
-            case '51_100': positionsText = 'От 51 до 100'; break;
-            case '101_150': positionsText = 'От 101 до 150'; break;
-            case 'more_150': 
-              positionsText = 'Более 150 позиций';
-              const details = formData.get('positionsCountDetails');
-              if(details) positionsText += ` (${details})`;
-              break;
-          }
-          resultsHtml += `<div class="results-item">
-            <div class="results-label">Количество позиций:</div>
-            <div class="results-value">${positionsText}</div>
-          </div>`;
-        }
-        
-        resultsHtml += `<div class="results-item">
-          <div class="results-label">Расширение матрицы:</div>
-          <div class="results-value">${formData.get('matrixExpansion') === 'yes' ? 'Да' : 'Нет'}</div>
-        </div>`;
-        resultsHtml += `<div class="results-item">
-          <div class="results-label">Процесс работы:</div>
-          <div class="results-value">${
-            (() => {
-              const mpProcess = formData.get('marketplaceProcess');
-              if (mpProcess === 'other') {
-                const otherVal = formData.get('otherProcessDetails');
-                return otherVal ? `Другое (${otherVal})` : 'Другое';
-              }
-              const mapVal = { staff: 'Сотрудник/ки в штате', outsourcing: 'Аутсорсинг', self: 'Веду самостоятельно' };
-              return mapVal[mpProcess] || mpProcess;
-            })()
-          }</div>
-        </div>`;
-      }
-  
-      // Добавляем контактную информацию
-      ['name', 'email', 'phone'].forEach(field => {
-        const value = formData.get(field);
-        if (value) {
-          const label = field === 'name' ? 'Имя' : field === 'email' ? 'Email' : 'Телефон';
-          resultsHtml += `<div class="results-item">
-            <div class="results-label">${label}:</div>
-            <div class="results-value">${value}</div>
-          </div>`;
-        }
-      });
-      resultsHtml += `</div>`;
-      return resultsHtml;
-    };
-  
-    // Отображение результатов в модальном окне
-    const displayResultsModal = (resultsHtml) => {
-      const oldModal = document.querySelector('.results-modal');
-      if (oldModal) oldModal.remove();
-  
-      const modal = document.createElement('div');
-      modal.className = 'results-modal';
-  
-      const content = document.createElement('div');
-      content.className = 'results-modal-content';
-  
-      const header = document.createElement('div');
-      header.className = 'results-modal-header';
-      const title = document.createElement('h2');
-      title.textContent = 'Результаты опроса';
-      const closeButton = document.createElement('button');
-      closeButton.className = 'results-modal-close';
-      closeButton.textContent = '×';
-      closeButton.addEventListener('click', () => modal.remove());
-      header.append(title, closeButton);
-  
-      const resultsContainer = document.createElement('div');
-      resultsContainer.className = 'results-modal-body';
-      resultsContainer.innerHTML = resultsHtml;
-  
-      const actionsDiv = document.createElement('div');
-      actionsDiv.className = 'results-modal-actions';
-      const copyButton = document.createElement('button');
-      copyButton.className = 'results-modal-button copy-button';
-      copyButton.textContent = 'Копировать результаты';
-      copyButton.addEventListener('click', () => {
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = resultsHtml;
-        const textToCopy = tempDiv.innerText;
-        navigator.clipboard.writeText(textToCopy)
-          .then(() => {
-            const notification = document.createElement('div');
-            notification.className = 'results-notification';
-            notification.textContent = 'Результаты скопированы в буфер обмена';
-            document.body.append(notification);
-            setTimeout(() => notification.remove(), 2000);
-          })
-          .catch(err => {
-            console.error('Ошибка при копировании: ', err);
-            alert('Не удалось скопировать результаты.');
-          });
-      });
-      const newTabButton = document.createElement('button');
-      newTabButton.className = 'results-modal-button new-tab-button';
-      newTabButton.textContent = 'Открыть в новой вкладке';
-      newTabButton.addEventListener('click', () => {
-        const newWindow = window.open('', '_blank');
-        if(newWindow) {
-          newWindow.document.write(`<!DOCTYPE html>
-            <html>
-            <head>
-              <meta charset="UTF-8">
-              <title>Результаты опроса</title>
-              <style>
-                body { font-family: Arial, sans-serif; background: #000; color: #fff; padding: 20px; }
-                .results-item { display: flex; margin: 10px 0; }
-                .results-label { width: 40%; font-weight: bold; }
-                .results-value { width: 60%; }
-              </style>
-            </head>
-            <body>
-              <h1>Результаты опроса</h1>
-              ${resultsHtml}
-            </body>
-            </html>`);
-          newWindow.document.close();
-        } else {
-          alert('Не удалось открыть новое окно.');
-        }
-      });
-      actionsDiv.append(copyButton, newTabButton);
-  
-      content.append(header, resultsContainer, actionsDiv);
-      modal.appendChild(content);
-      document.body.appendChild(modal);
-      modal.scrollIntoView({ behavior: 'smooth' });
-    };
-  
-    // Обработка отправки формы
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      const resultsHtml = createResultsTable(formData);
-      if (resultsHtml) {
-        displayResultsModal(resultsHtml);
-      } else {
-        alert('Ошибка при обработке формы.');
-      }
     });
-  });
-  
+
+    // Обработка чекбоксов "Другое"
+    document.querySelectorAll('input[data-other="true"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const textInput = this.closest('.checkbox-group').nextElementSibling;
+            if (textInput && textInput.classList.contains('text-input')) {
+                textInput.style.display = this.checked ? 'block' : 'none';
+                const inputField = textInput.querySelector('input');
+                if (inputField) {
+                    if (this.checked) {
+                        inputField.setAttribute('required', 'required');
+                    } else {
+                        inputField.removeAttribute('required');
+                        inputField.value = ''; // Очищаем значение при скрытии
+                    }
+                }
+            }
+        });
+    });
+
+    // Обработка радио-кнопок с дополнительными полями
+    document.querySelectorAll('input[name="analyticsServices"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const detailsInput = document.getElementById('analyticsServicesInput');
+            if (detailsInput) {
+                detailsInput.style.display = this.value === 'yes' ? 'block' : 'none';
+                const inputField = detailsInput.querySelector('input[name="analyticsServicesDetails"]');
+                if (inputField) {
+                    inputField.required = this.value === 'yes';
+                }
+            }
+        });
+    });
+
+    // Обработка радио-кнопок с дополнительными полями
+    document.querySelectorAll('input[name="positionsCount"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const detailsInput = document.getElementById('positionsCountInput');
+            if (detailsInput) {
+                detailsInput.style.display = this.value === 'more_150' ? 'block' : 'none';
+                const inputField = detailsInput.querySelector('input[name="positionsCountDetails"]');
+                if (inputField) {
+                    inputField.required = this.value === 'more_150';
+                }
+            }
+        });
+    });
+
+    // Обработка радио-кнопок с дополнительными полями
+    document.querySelectorAll('input[name="matrixExpansion"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const detailsInput = document.getElementById('expansionDetailsInput');
+            if (detailsInput) {
+                detailsInput.style.display = this.value === 'yes' ? 'block' : 'none';
+                const inputField = detailsInput.querySelector('input[name="expansionDetails"]');
+                if (inputField) {
+                    inputField.required = this.value === 'yes';
+                }
+            }
+        });
+    });
+
+    document.querySelectorAll('input[name="marketplaceProcess"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const detailsInput = document.getElementById('otherProcessInput');
+            if (detailsInput) {
+                detailsInput.style.display = this.value === 'other' ? 'block' : 'none';
+                const inputField = detailsInput.querySelector('input[name="otherProcessDetails"]');
+                if (inputField) {
+                    inputField.required = this.value === 'other';
+                }
+            }
+        });
+    });
+
+    // Обработка радио-кнопок с дополнительными полями
+    document.querySelectorAll('input[name="workStructureEntry"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const detailsInput = document.getElementById('otherWorkStructureEntryInput');
+            if (detailsInput) {
+                detailsInput.style.display = this.value === 'other' ? 'block' : 'none';
+                const inputField = detailsInput.querySelector('input[name="otherWorkStructureEntry"]');
+                if (inputField) {
+                    inputField.required = this.value === 'other';
+                }
+            }
+        });
+    });
+
+    // Обработчик отправки формы
+    document.getElementById('clientForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Проверяем только видимые поля
+        const visibleInputs = Array.from(this.querySelectorAll('input:not([type="radio"]):not([type="checkbox"])'))
+            .filter(input => {
+                const parentDiv = input.closest('.text-input');
+                return !parentDiv || window.getComputedStyle(parentDiv).display !== 'none';
+            });
+            
+        const emptyFields = visibleInputs.filter(input => {
+            const isRequired = input.hasAttribute('required');
+            const isEmpty = !input.value.trim();
+            return isRequired && isEmpty;
+        });
+        
+        if (emptyFields.length > 0) {
+            alert('Пожалуйста, заполните все обязательные поля');
+            return;
+        }
+        
+        try {
+            // Если все в порядке, собираем и отображаем результаты
+            const formData = collectAllResults();
+            if (Object.keys(formData).length === 0) {
+                alert('Нет данных для отображения');
+                return;
+            }
+            displayResultsModal(formData);
+        } catch (error) {
+            console.error('Ошибка при обработке формы:', error);
+            alert('Произошла ошибка при обработке формы');
+        }
+    });
+
+    // Копирование результатов
+    copyBtn.addEventListener('click', function() {
+        const table = document.querySelector('.results-table');
+        if (!table) return;
+        
+        const rows = Array.from(table.querySelectorAll('tr')).slice(1); // Пропускаем заголовок
+        const text = rows.map(row => {
+            const cells = row.querySelectorAll('td');
+            return `${cells[0].textContent}: ${cells[1].textContent}`;
+        }).join('\n');
+        
+        navigator.clipboard.writeText(text)
+            .then(() => alert('Результаты скопированы в буфер обмена'))
+            .catch(err => console.error('Ошибка при копировании:', err));
+    });
+
+    // Закрытие модального окна
+    closeBtn.addEventListener('click', function() {
+        resultModal.style.display = 'none';
+    });
+
+    // Функция для отображения результатов в модальном окне
+    function displayResultsModal(formData) {
+        const resultContainer = document.getElementById('surveyResults');
+        const modal = document.getElementById('resultsModal');
+        
+        if (!resultContainer || !modal) {
+            console.error('Не найдены элементы для отображения результатов');
+            return;
+        }
+
+        // Создаем таблицу результатов
+        let resultsHtml = '<table class="results-table">';
+        resultsHtml += '<thead><tr><th>Вопрос</th><th>Ответ</th></tr></thead><tbody>';
+        
+        for (const [question, answer] of Object.entries(formData)) {
+            resultsHtml += `
+                <tr>
+                    <td>${question}</td>
+                    <td>${answer}</td>
+                </tr>`;
+        }
+        
+        resultsHtml += '</tbody></table>';
+        
+        // Отображаем результаты
+        resultContainer.innerHTML = resultsHtml;
+        modal.style.display = 'block';
+    }
+
+    // Вспомогательные функции
+    function getWorkFormatLabel(value) {
+        const labels = {
+            'self': 'Самостоятельная работа с сервисом',
+            'delegate': 'Делегировать ведение магазина нашей команде',
+            'marketplace_entry': 'Выход на маркетплейсы под ключ'
+        };
+        return labels[value] || value;
+    }
+
+    function getProductTypeLabel(value) {
+        const labels = {
+            'manufacturer': 'Производитель',
+            'distributor': 'Дистрибьютор'
+        };
+        return labels[value] || value;
+    }
+
+    function getWorkStructureLabel(value) {
+        const labels = {
+            'staff': 'Сотрудник/ки в штате',
+            'outsourcing': 'Аутсорсинг',
+            'self': 'Планировал вести самостоятельно',
+            'other': 'Другое'
+        };
+        return labels[value] || value;
+    }
+
+    // Функция для сбора всех результатов
+    function collectAllResults() {
+        let results = {};
+        
+        try {
+            // Собираем информацию о клиенте
+            const clientName = document.getElementById('clientName')?.value;
+            const companyName = document.getElementById('companyName')?.value;
+            
+            if (clientName) results['Имя клиента'] = clientName;
+            if (companyName) results['Название компании'] = companyName;
+
+            // Получаем выбранный формат работы
+            const workFormat = document.querySelector('input[name="workFormat"]:checked');
+            if (!workFormat) {
+                console.log('Формат работы не выбран');
+                return results;
+            }
+            
+            results['Формат работы'] = getWorkFormatLabel(workFormat.value);
+            console.log('Выбранный формат работы:', workFormat.value);
+
+            // В зависимости от формата работы собираем соответствующие данные
+            switch (workFormat.value) {
+                case 'self':
+                    collectSelfWorkResults(results);
+                    break;
+                case 'delegate':
+                    collectDelegateResults(results);
+                    break;
+                case 'marketplace_entry':
+                    collectMarketplaceEntryResults(results);
+                    break;
+            }
+        } catch (error) {
+            console.error('Ошибка при сборе результатов:', error);
+        }
+
+        return results;
+    }
+
+    // Функция для создания перетаскиваемого элемента
+    function createDraggableItem(text) {
+        const item = document.createElement('div');
+        item.className = 'priority-item';
+        item.draggable = true;
+        
+        const number = document.createElement('div');
+        number.className = 'priority-number';
+        
+        const textElement = document.createElement('div');
+        textElement.className = 'priority-text';
+        textElement.textContent = text;
+        
+        item.appendChild(number);
+        item.appendChild(textElement);
+        
+        item.addEventListener('dragstart', function(e) {
+            e.dataTransfer.setData('text/plain', text);
+            this.classList.add('dragging');
+        });
+        
+        item.addEventListener('dragend', function() {
+            this.classList.remove('dragging');
+            updatePriorityNumbers(this.parentElement);
+        });
+        
+        return item;
+    }
+
+    // Функция для обновления нумерации элементов приоритета
+    function updatePriorityNumbers(container) {
+        const items = container.querySelectorAll('.priority-item');
+        items.forEach((item, index) => {
+            item.querySelector('.priority-number').textContent = index + 1;
+        });
+    }
+
+    // Обработчики для перетаскивания
+    function setupDragAndDrop(container) {
+        container.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            const draggingItem = document.querySelector('.dragging');
+            if (!draggingItem) return;
+            
+            const siblings = [...this.querySelectorAll('.priority-item:not(.dragging)')];
+            const nextSibling = siblings.find(sibling => {
+                const box = sibling.getBoundingClientRect();
+                const offset = box.top + box.height / 2;
+                return e.clientY < offset;
+            });
+            
+            this.insertBefore(draggingItem, nextSibling);
+        });
+    }
+
+    // Функция для обновления списка приоритетов
+    function updatePriorityList(groupId, priorityId) {
+        const group = document.getElementById(groupId);
+        const priorityContainer = document.getElementById(priorityId);
+        
+        if (!group || !priorityContainer) return;
+        
+        priorityContainer.innerHTML = '';
+        
+        const selectedItems = Array.from(group.querySelectorAll('input[type="checkbox"]:checked'))
+            .map(checkbox => checkbox.nextElementSibling.textContent.trim());
+        
+        selectedItems.forEach(text => {
+            const item = createDraggableItem(text);
+            priorityContainer.appendChild(item);
+        });
+        
+        updatePriorityNumbers(priorityContainer);
+    }
+
+    // Обработчики для перетаскивания
+    document.querySelectorAll('.priority-group').forEach(container => {
+        setupDragAndDrop(container);
+    });
+
+    // Обработчики для чекбоксов
+    document.querySelectorAll('#supportProcessGroup input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            updatePriorityList('supportProcessGroup', 'supportProcessPriority');
+        });
+    });
+
+    document.querySelectorAll('#newArticlesGroup input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            updatePriorityList('newArticlesGroup', 'newArticlesPriority');
+        });
+    });
+
+    document.querySelectorAll('#matrixOptimizationGroup input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            updatePriorityList('matrixOptimizationGroup', 'matrixOptimizationPriority');
+        });
+    });
+
+    // Функция для сбора приоритетов
+    function collectPriorities(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return [];
+        
+        return Array.from(container.querySelectorAll('.priority-item'))
+            .map(item => item.querySelector('.priority-text').textContent);
+    }
+
+    // Функция для сбора результатов самостоятельной работы
+    function collectSelfWorkResults(results) {
+        try {
+            // Собираем данные о текущих маркетплейсах
+            const currentMarketplaces = Array.from(document.querySelectorAll('input[name="currentMarketplaces"]:checked'))
+                .map(input => input.nextElementSibling.textContent.trim());
+            if (currentMarketplaces.length > 0) {
+                results['Текущие маркетплейсы'] = currentMarketplaces.join(', ');
+            }
+
+            // Собираем данные о планируемых маркетплейсах
+            const plannedMarketplaces = Array.from(document.querySelectorAll('input[name="plannedMarketplaces"]:checked'))
+                .map(input => input.nextElementSibling.textContent.trim());
+            if (plannedMarketplaces.length > 0) {
+                results['Планируемые маркетплейсы'] = plannedMarketplaces.join(', ');
+            }
+
+            // Собираем данные о сервисах аналитики
+            const analyticsService = document.querySelector('input[name="analyticsServices"]:checked');
+            if (analyticsService) {
+                if (analyticsService.value === 'yes') {
+                    const details = document.querySelector('input[name="analyticsServicesDetails"]')?.value;
+                    results['Пользуетесь ли каким-то сервисом аналитики?'] = `Да: ${details || ''}`;
+                } else {
+                    results['Пользуетесь ли каким-то сервисом аналитики?'] = 'Нет, не пользуюсь';
+                }
+            }
+
+            // Собираем данные о важных блоках
+            const importantBlocks = Array.from(document.querySelectorAll('input[name="importantBlocks"]:checked'))
+                .map(input => input.nextElementSibling.textContent.trim());
+            if (importantBlocks.length > 0) {
+                results['Важные блоки в работе с маркетплейсами'] = importantBlocks.join(', ');
+            }
+
+            // Собираем данные о процессах автоматизации
+            const automationProcesses = Array.from(document.querySelectorAll('input[name="automationProcesses"]:checked'))
+                .map(input => input.nextElementSibling.textContent.trim());
+            if (automationProcesses.length > 0) {
+                results['Процессы для автоматизации'] = automationProcesses.join(', ');
+            }
+
+            // Собираем приоритеты для процесса поддержки продаж
+            const supportProcessPriorities = collectPriorities('supportProcessPriority');
+            if (supportProcessPriorities.length > 0) {
+                results['Приоритеты процесса поддержки продаж'] = supportProcessPriorities.map((item, index) => 
+                    `${index + 1}. ${item}`
+                ).join('\n');
+            }
+
+            // Собираем приоритеты для новых артикулов
+            const newArticlesPriorities = collectPriorities('newArticlesPriority');
+            if (newArticlesPriorities.length > 0) {
+                results['Приоритеты внедрения новых артикулов'] = newArticlesPriorities.map((item, index) => 
+                    `${index + 1}. ${item}`
+                ).join('\n');
+            }
+
+            // Собираем приоритеты для оптимизации матрицы
+            const matrixOptimizationPriorities = collectPriorities('matrixOptimizationPriority');
+            if (matrixOptimizationPriorities.length > 0) {
+                results['Приоритеты оптимизации матрицы'] = matrixOptimizationPriorities.map((item, index) => 
+                    `${index + 1}. ${item}`
+                ).join('\n');
+            }
+        } catch (error) {
+            console.error('Ошибка при сборе результатов самостоятельной работы:', error);
+        }
+    }
+
+    // Функция для сбора результатов делегирования
+    function collectDelegateResults(results) {
+        try {
+            const productType = document.querySelector('input[name="productType"]:checked');
+            const productDescription = document.querySelector('input[name="productDescription"]')?.value;
+            
+            if (productType && productDescription) {
+                results['С каким товаром работаете?'] = 
+                    `${getProductTypeLabel(productType.value)}: ${productDescription}`;
+            }
+
+            // Собираем данные о текущих маркетплейсах
+            const currentMarketplaces = Array.from(document.querySelectorAll('input[name="currentMarketplacesDelegate"]:checked'))
+                .map(input => input.nextElementSibling.textContent.trim());
+            if (currentMarketplaces.length > 0) {
+                results['Текущие маркетплейсы'] = currentMarketplaces.join(', ');
+            }
+
+            // Собираем данные о планируемых маркетплейсах
+            const plannedMarketplaces = Array.from(document.querySelectorAll('input[name="plannedMarketplacesDelegate"]:checked'))
+                .map(input => input.nextElementSibling.textContent.trim());
+            if (plannedMarketplaces.length > 0) {
+                results['Планируемые маркетплейсы'] = plannedMarketplaces.join(', ');
+            }
+
+            // Собираем данные о количестве позиций
+            const positionsCount = document.querySelector('input[name="positionsCount"]:checked');
+            if (positionsCount) {
+                if (positionsCount.value === 'more_150') {
+                    const details = document.querySelector('input[name="positionsCountDetails"]')?.value;
+                    results['Количество продаваемых позиций'] = `Более 150 позиций: ${details || ''}`;
+                } else {
+                    results['Количество продаваемых позиций'] = positionsCount.nextElementSibling.textContent.trim();
+                }
+            }
+
+            // Собираем данные о расширении матрицы
+            const matrixExpansion = document.querySelector('input[name="matrixExpansion"]:checked');
+            if (matrixExpansion) {
+                if (matrixExpansion.value === 'yes') {
+                    const details = document.querySelector('input[name="expansionDetails"]')?.value;
+                    results['Планируете расширение матрицы?'] = `Да: ${details || ''}`;
+                } else {
+                    results['Планируете расширение матрицы?'] = 'Нет';
+                }
+            }
+
+            // Собираем данные о процессе работы
+            const marketplaceProcess = document.querySelector('input[name="marketplaceProcess"]:checked');
+            if (marketplaceProcess) {
+                if (marketplaceProcess.value === 'other') {
+                    const details = document.querySelector('input[name="otherProcessDetails"]')?.value;
+                    results['Как выстроен процесс работы с маркетплейсами?'] = `Другое: ${details || ''}`;
+                } else {
+                    results['Как выстроен процесс работы с маркетплейсами?'] = marketplaceProcess.nextElementSibling.textContent.trim();
+                }
+            }
+        } catch (error) {
+            console.error('Ошибка при сборе результатов делегирования:', error);
+        }
+    }
+
+    // Функция для сбора результатов выхода на маркетплейсы
+    function collectMarketplaceEntryResults(results) {
+        try {
+            const targetMarketplaces = document.querySelector('input[name="targetMarketplaces"]')?.value;
+            if (targetMarketplaces) {
+                results['На какие площадки планируете выходить?'] = targetMarketplaces;
+            }
+
+            const productType = document.querySelector('input[name="productTypeEntry"]:checked');
+            if (productType) {
+                results['С каким товаром хотите работать?'] = 
+                    `${getProductTypeLabel(productType.value)}: ${document.querySelector('input[name="productDescriptionEntry"]')?.value || ''}`;
+            }
+
+            // Собираем данные о структуре работы
+            const workStructure = document.querySelector('input[name="workStructureEntry"]:checked');
+            if (workStructure) {
+                if (workStructure.value === 'other') {
+                    const details = document.querySelector('input[name="otherWorkStructureEntry"]')?.value;
+                    results['Как будет строиться работа с маркетплейсами?'] = `Другое: ${details || ''}`;
+                } else {
+                    results['Как будет строиться работа с маркетплейсами?'] = workStructure.nextElementSibling.textContent.trim();
+                }
+            }
+        } catch (error) {
+            console.error('Ошибка при сборе результатов выхода на маркетплейсы:', error);
+        }
+    }
+
+    // Инициализация при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function() {
+        // Инициализация перетаскивания для всех контейнеров приоритетов
+        document.querySelectorAll('.priority-group').forEach(container => {
+            setupDragAndDrop(container);
+        });
+
+        // Обработчики для чекбоксов
+        document.querySelectorAll('#supportProcessGroup input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                updatePriorityList('supportProcessGroup', 'supportProcessPriority');
+            });
+        });
+
+        document.querySelectorAll('#newArticlesGroup input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                updatePriorityList('newArticlesGroup', 'newArticlesPriority');
+            });
+        });
+
+        document.querySelectorAll('#matrixOptimizationGroup input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                updatePriorityList('matrixOptimizationGroup', 'matrixOptimizationPriority');
+            });
+        });
+    });
+
+    // Обработчик клика вне модального окна для его закрытия
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('resultsModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+}
