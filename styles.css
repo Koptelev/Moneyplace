@@ -290,108 +290,102 @@ h4 {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
+    overflow-y: auto;
 }
 
 .modal-content {
-    background-color: #fff;
-    margin: 15% auto;
-    padding: 20px;
-    border-radius: 5px;
-    width: 80%;
+    background-color: #000000;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
     max-width: 800px;
     position: relative;
+    color: #ffffff;
+    border: 2px solid #01BF83;
 }
 
 .modal-buttons {
-    margin-top: 20px;
-    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+    position: sticky;
+    bottom: 0;
+    background-color: #000000;
+    padding: 15px 0;
+    border-top: 1px solid #01BF83;
 }
 
 .modal-buttons button {
-    margin-left: 10px;
-    padding: 8px 16px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+#copyResults {
+    background-color: #01BF83;
+    color: white;
+}
+
+#exportPDF {
+    background-color: #01BF83;
+    color: white;
+}
+
+#closeModal {
+    background-color: #333333;
+    color: white;
+}
+
+#copyResults:hover, #exportPDF:hover {
+    background-color: #00a873;
+    transform: translateY(-2px);
+}
+
+#closeModal:hover {
+    background-color: #444444;
+    transform: translateY(-2px);
 }
 
 .results-table {
     width: 100%;
     margin: 20px 0;
     font-size: 16px;
-    color: #000000;
+    color: #ffffff;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .results-table th,
 .results-table td {
     padding: 12px 15px;
-    border-bottom: 1px solid #ddd;
-    color: #000000;
+    border-bottom: 1px solid #01BF83;
 }
 
 .results-table th {
-    background-color: #f8f9fa;
+    background-color: #111111;
     font-weight: 600;
-    color: #000000;
+    color: #ffffff;
 }
 
 .results-table tr:hover {
-    background-color: #f5f5f5;
+    background-color: #111111;
 }
 
 .results-table td:first-child {
     width: 40%;
     font-weight: 500;
-    color: #000000;
+    color: #ffffff;
 }
 
 .results-table td:last-child {
     width: 60%;
-    color: #000000;
-}
-
-#copyResults, #closeModal {
-    margin: 10px;
-    padding: 8px 16px;
-    cursor: pointer;
-}
-
-.modal-content {
-    max-width: 800px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-.modal-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.modal-buttons button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-#copyResults {
-    background-color: #4CAF50;
-    color: white;
-}
-
-#closeModal {
-    background-color: #f44336;
-    color: white;
-}
-
-#copyResults:hover {
-    background-color: #45a049;
-}
-
-#closeModal:hover {
-    background-color: #da190b;
+    color: #ffffff;
 }
 
 .ranked-possibilities {
