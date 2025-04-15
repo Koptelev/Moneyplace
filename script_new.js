@@ -210,18 +210,45 @@ function init() {
         }
     });
 
-    // Копирование результатов
-    copyBtn.addEventListener('click', function() {
-        const table = document.querySelector('.results-table');
-        if (!table) return;
+    // Добавляем обработчик для экспорта в Excel
+    document.getElementById('exportPDF').addEventListener('click', function() {
+        const formData = collectAllResults();
         
-        const rows = Array.from(table.querySelectorAll('tr')).slice(1); // Пропускаем заголовок
-        const text = rows.map(row => {
-            const cells = row.querySelectorAll('td');
-            return `${cells[0].textContent}: ${cells[1].textContent}`;
-        }).join('\n');
+        // Создаем рабочую книгу Excel
+        const wb = XLSX.utils.book_new();
         
-        navigator.clipboard.writeText(text)
+        // Преобразуем данные в формат для Excel
+        const data = [
+            ['Вопрос', 'Ответ'], // Заголовки
+            ...Object.entries(formData).map(([question, answer]) => [question, answer])
+        ];
+        
+        // Создаем рабочий лист
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        
+        // Настраиваем стили для заголовков
+        ws['!cols'] = [
+            {wch: 40}, // Ширина для колонки вопросов
+            {wch: 60}  // Ширина для колонки ответов
+        ];
+        
+        // Добавляем лист в книгу
+        XLSX.utils.book_append_sheet(wb, ws, "Результаты");
+        
+        // Сохраняем файл
+        XLSX.writeFile(wb, "Результаты опроса.xlsx");
+    });
+
+    // Обновляем обработчик копирования
+    document.getElementById('copyResults').addEventListener('click', function() {
+        const formData = collectAllResults();
+        let textToCopy = '';
+        
+        for (const [question, answer] of Object.entries(formData)) {
+            textToCopy += `${question}\n${answer}\n\n`;
+        }
+        
+        navigator.clipboard.writeText(textToCopy)
             .then(() => alert('Результаты скопированы в буфер обмена'))
             .catch(err => console.error('Ошибка при копировании:', err));
     });
