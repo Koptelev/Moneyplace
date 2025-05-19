@@ -258,20 +258,22 @@ function init() {
         resultModal.style.display = 'none';
     });
 
-    // Функция для отображения результатов в модальном окне
+    // Модификация: показываем блок ранжирования возможностей только для self
     function displayResultsModal(formData) {
         const resultContainer = document.getElementById('surveyResults');
         const modal = document.getElementById('resultsModal');
-        
+        const rankedBlock = document.getElementById('rankedPossibilitiesBlock');
+        // Сброс значений
+        document.getElementById('possibility1').value = '';
+        document.getElementById('possibility2').value = '';
+        document.getElementById('possibility3').value = '';
         if (!resultContainer || !modal) {
             console.error('Не найдены элементы для отображения результатов');
             return;
         }
-
         // Создаем таблицу результатов
         let resultsHtml = '<table class="results-table">';
         resultsHtml += '<thead><tr><th>Вопрос</th><th>Ответ</th></tr></thead><tbody>';
-        
         for (const [question, answer] of Object.entries(formData)) {
             resultsHtml += `
                 <tr>
@@ -279,13 +281,43 @@ function init() {
                     <td>${answer}</td>
                 </tr>`;
         }
-        
         resultsHtml += '</tbody></table>';
-        
-        // Отображаем результаты
         resultContainer.innerHTML = resultsHtml;
         modal.style.display = 'block';
+        // Показываем блок только если формат работы self
+        if (formData['Формат работы'] === 'Самостоятельная работа с сервисом') {
+            rankedBlock.style.display = 'block';
+        } else {
+            rankedBlock.style.display = 'none';
+        }
     }
+
+    // Обработка кнопки "Дополнить результаты"
+    document.getElementById('addPossibilitiesBtn').addEventListener('click', function() {
+        const p1 = document.getElementById('possibility1').value.trim();
+        const p2 = document.getElementById('possibility2').value.trim();
+        const p3 = document.getElementById('possibility3').value.trim();
+        let text = '';
+        if (p1) text += `1. ${p1}\n`;
+        if (p2) text += `2. ${p2}\n`;
+        if (p3) text += `3. ${p3}`;
+        if (text) {
+            // Добавляем в конец таблицы
+            const table = document.querySelector('#surveyResults table tbody');
+            if (table) {
+                const tr = document.createElement('tr');
+                const tdQ = document.createElement('td');
+                tdQ.textContent = 'Ранжированные возможности';
+                const tdA = document.createElement('td');
+                tdA.textContent = text;
+                tr.appendChild(tdQ);
+                tr.appendChild(tdA);
+                table.appendChild(tr);
+            }
+            // Скрываем блок
+            document.getElementById('rankedPossibilitiesBlock').style.display = 'none';
+        }
+    });
 
     // Вспомогательные функции
     function getWorkFormatLabel(value) {
