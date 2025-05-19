@@ -218,24 +218,6 @@
                         <input type="text" name="otherAutomationProcesses" placeholder="Укажите другие процессы">
                     </div>
                 </div>
-
-                <div class="form-section">
-                    <h3>Проранжируйте возможности, которые выделили для себя</h3>
-                    <div class="ranked-possibilities">
-                        <div class="ranked-item">
-                            <span class="rank-number">1.</span>
-                            <input type="text" name="possibility1" placeholder="Введите первую возможность">
-                        </div>
-                        <div class="ranked-item">
-                            <span class="rank-number">2.</span>
-                            <input type="text" name="possibility2" placeholder="Введите вторую возможность">
-                        </div>
-                        <div class="ranked-item">
-                            <span class="rank-number">3.</span>
-                            <input type="text" name="possibility3" placeholder="Введите третью возможность">
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div id="delegateSection" style="display: none;">
@@ -453,6 +435,24 @@
         <div class="modal-content">
             <h2>Результаты опроса</h2>
             <div id="surveyResults"></div>
+            <div id="rankedPossibilitiesBlock" style="display: none; margin-top: 24px;">
+                <h3>Проранжируйте возможности, которые выделили для себя</h3>
+                <div class="ranked-possibilities">
+                    <div class="ranked-item">
+                        <span class="rank-number">1.</span>
+                        <input type="text" id="possibility1" placeholder="Введите первую возможность">
+                    </div>
+                    <div class="ranked-item">
+                        <span class="rank-number">2.</span>
+                        <input type="text" id="possibility2" placeholder="Введите вторую возможность">
+                    </div>
+                    <div class="ranked-item">
+                        <span class="rank-number">3.</span>
+                        <input type="text" id="possibility3" placeholder="Введите третью возможность">
+                    </div>
+                </div>
+                <button type="button" id="addPossibilitiesBtn" class="submit-button" style="margin-top: 12px;">Дополнить результаты</button>
+            </div>
             <div class="modal-buttons">
                 <button type="button" id="copyResults">Копировать результаты</button>
                 <button type="button" id="exportPDF">Экспорт в Excel</button>
